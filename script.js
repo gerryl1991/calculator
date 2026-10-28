@@ -196,11 +196,78 @@ function init() {
     if (btn) press(btn.dataset.key);
   });
 
-  // keyboard
+  // Each cell matches the visible grid; repeated keys represent spanning buttons.
+  const keyLayout = [
+    ["Escape", "Backspace", "/", "*"],
+    ["7", "8", "9", "-"],
+    ["4", "5", "6", "+"],
+    ["1", "2", "3", "Enter"],
+    ["0", "0", ".", "Enter"]
+  ];
+  const keysEl = document.querySelector(".keys");
+  const buttons = Array.from(keysEl.querySelectorAll("button"));
+  const buttonsByKey = new Map(buttons.map(button => [button.dataset.key, button]));
+  const directions = {
+    ArrowLeft: [0, -1],
+    ArrowRight: [0, 1],
+    ArrowUp: [-1, 0],
+    ArrowDown: [1, 0]
+  };
+
+  function moveFocus(key) {
+    const focused = document.activeElement;
+    const position = keyLayout.flatMap((row, rowIndex) =>
+      row.map((value, columnIndex) => ({ value, rowIndex, columnIndex }))
+    ).find(cell => cell.value === focused?.dataset?.key);
+
+    // An arrow key can also bring focus into the calculator.
+    if (!position || !keysEl.contains(focused)) {
+      buttons[0].focus();
+      return;
+    }
+
+    const [rowStep, columnStep] = directions[key];
+    let row = position.rowIndex + rowStep;
+    let column = position.columnIndex + columnStep;
+
+    while (row >= 0 && row < keyLayout.length && column >= 0 && column < 4) {
+      const nextButton = buttonsByKey.get(keyLayout[row][column]);
+      if (nextButton !== focused && !nextButton.disabled) {
+        nextButton.focus();
+        return;
+      }
+      row += rowStep;
+      column += columnStep;
+    }
+  }
+
   document.addEventListener("keydown", event => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
-    if (event.key === "Enter" || event.key === "/") event.preventDefault();
-    press(event.key);
+    // Leave any future text fields' keyboard behaviour alone.
+    if (event.target instanceof Element &&
+        event.target.closest("input, textarea, select, [contenteditable]")) return;
+
+    if (Object.hasOwn(directions, event.key)) {
+      event.preventDefault();
+      moveFocus(event.key);
+      return;
+    }
+
+    const focusedButton = buttons.includes(document.activeElement)
+      ? document.activeElement : null;
+    if (event.key === "Enter" && focusedButton) {
+      event.preventDefault();
+      focusedButton.click();
+      return;
+    }
+
+    const shortcuts = ["+", "-", "*", "/", ".", "Enter", "=",
+      "Backspace", "Escape", "Delete"];
+    if (/^\d$/.test(event.key) || shortcuts.includes(event.key)) {
+      event.preventDefault();
+      press(event.key);
+    }
+    // Tab, Shift+Tab and Space retain native button behaviour.
   });
 
   updateDisplay();
