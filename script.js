@@ -1,21 +1,31 @@
-// ---------- Math functions ----------
-function add(a, b) { return a + b; }
-function subtract(a, b) { return a - b; }
-function multiply(a, b) { return a * b; }
-function divide(a, b) { return b === 0 ? null : a / b; } // null signals divide-by-zero
+function add(a, b) {
+  return a + b;
+}
+function subtract(a, b) {
+  return a - b;
+}
+function multiply(a, b) {
+  return a * b;
+}
+function divide(a, b) {
+  return b === 0 ? null : a / b;
+}
 
-// calls the right math function for the chosen operator
 function operate(operator, a, b) {
   switch (operator) {
-    case "+": return add(a, b);
-    case "-": return subtract(a, b);
-    case "*": return multiply(a, b);
-    case "/": return divide(a, b);
-    default: return null;
+    case "+":
+      return add(a, b);
+    case "-":
+      return subtract(a, b);
+    case "*":
+      return multiply(a, b);
+    case "/":
+      return divide(a, b);
+    default:
+      return null;
   }
 }
 
-// ---------- State ----------
 const MAX_DIGITS = 12;
 const SYMBOLS = { "+": "+", "-": "\u2212", "*": "\u00d7", "/": "\u00f7" };
 const SNARKY_MESSAGES = [
@@ -24,16 +34,16 @@ const SNARKY_MESSAGES = [
   "I'm a calculator, not a magician.",
   "Math says no. So do I.",
   "Nope. Not today, not ever.",
-  "That's not how any of this works."
+  "That's not how any of this works.",
 ];
 
 const state = {
-  displayValue: "0",   // number being typed, or the latest result
-  firstNumber: null,   // stored number waiting for an operation
-  operator: null,      // chosen operator
-  resetNext: false,    // next digit starts a fresh number
+  displayValue: "0",
+  firstNumber: null,
+  operator: null,
+  resetNext: false,
   hasError: false,
-  history: ""          // full expression shown above the result
+  history: "",
 };
 
 const currentEl = document.getElementById("current");
@@ -42,7 +52,7 @@ const decimalBtn = document.getElementById("decimal");
 
 // ---------- Display ----------
 function formatResult(number) {
-  let rounded = parseFloat(number.toPrecision(10));   // kills 0.1+0.2 style noise
+  let rounded = parseFloat(number.toPrecision(10)); // kills 0.1+0.2 style noise
   let text = String(rounded);
   if (text.length > MAX_DIGITS) text = rounded.toExponential(5);
   return text;
@@ -64,8 +74,11 @@ function updateDecimalButton() {
 }
 
 function highlightOperator() {
-  document.querySelectorAll(".op").forEach(btn => {
-    btn.classList.toggle("active", state.resetNext && btn.dataset.key === state.operator);
+  document.querySelectorAll(".op").forEach((btn) => {
+    btn.classList.toggle(
+      "active",
+      state.resetNext && btn.dataset.key === state.operator,
+    );
   });
 }
 
@@ -73,7 +86,7 @@ function highlightOperator() {
 function startFreshNumberIfNeeded() {
   if (state.hasError) clearAll();
   if (!state.resetNext) return;
-  if (!state.operator) state.history = "";   // finished expression -> start over
+  if (!state.operator) state.history = ""; // finished expression -> start over
   state.displayValue = "0";
   state.resetNext = false;
 }
@@ -81,22 +94,24 @@ function startFreshNumberIfNeeded() {
 function inputDigit(digit) {
   startFreshNumberIfNeeded();
   if (state.displayValue.replace(/[-.]/g, "").length >= MAX_DIGITS) return;
-  state.displayValue = state.displayValue === "0" ? digit : state.displayValue + digit;
+  state.displayValue =
+    state.displayValue === "0" ? digit : state.displayValue + digit;
   updateDisplay();
 }
 
 function inputDecimal() {
   startFreshNumberIfNeeded();
-  if (state.displayValue.includes(".")) return;   // only one decimal point
+  if (state.displayValue.includes(".")) return; // only one decimal point
   state.displayValue += ".";
   updateDisplay();
 }
 
 function backspace() {
   if (state.hasError) return clearAll();
-  if (state.resetNext) return;                    // don't edit a finished result
+  if (state.resetNext) return; // don't edit a finished result
   const value = state.displayValue;
-  const isSingle = value.length === 1 || (value.length === 2 && value.startsWith("-"));
+  const isSingle =
+    value.length === 1 || (value.length === 2 && value.startsWith("-"));
   state.displayValue = isSingle ? "0" : value.slice(0, -1);
   updateDisplay();
 }
@@ -152,7 +167,7 @@ function chooseOperator(operator) {
     const typed = state.displayValue;
     const result = evaluatePair();
     if (result === null) return;
-    state.history += ` ${typed} ${SYMBOLS[operator]}`;   // keep every number visible
+    state.history += ` ${typed} ${SYMBOLS[operator]}`; // keep every number visible
     state.firstNumber = result;
     state.displayValue = formatResult(result);
   } else {
@@ -191,7 +206,7 @@ function press(key) {
 
 function init() {
   // mouse
-  document.querySelector(".keys").addEventListener("click", event => {
+  document.querySelector(".keys").addEventListener("click", (event) => {
     const btn = event.target.closest("button");
     if (btn) press(btn.dataset.key);
   });
@@ -202,23 +217,27 @@ function init() {
     ["7", "8", "9", "-"],
     ["4", "5", "6", "+"],
     ["1", "2", "3", "Enter"],
-    ["0", "0", ".", "Enter"]
+    ["0", "0", ".", "Enter"],
   ];
   const keysEl = document.querySelector(".keys");
   const buttons = Array.from(keysEl.querySelectorAll("button"));
-  const buttonsByKey = new Map(buttons.map(button => [button.dataset.key, button]));
+  const buttonsByKey = new Map(
+    buttons.map((button) => [button.dataset.key, button]),
+  );
   const directions = {
     ArrowLeft: [0, -1],
     ArrowRight: [0, 1],
     ArrowUp: [-1, 0],
-    ArrowDown: [1, 0]
+    ArrowDown: [1, 0],
   };
 
   function moveFocus(key) {
     const focused = document.activeElement;
-    const position = keyLayout.flatMap((row, rowIndex) =>
-      row.map((value, columnIndex) => ({ value, rowIndex, columnIndex }))
-    ).find(cell => cell.value === focused?.dataset?.key);
+    const position = keyLayout
+      .flatMap((row, rowIndex) =>
+        row.map((value, columnIndex) => ({ value, rowIndex, columnIndex })),
+      )
+      .find((cell) => cell.value === focused?.dataset?.key);
 
     // An arrow key can also bring focus into the calculator.
     if (!position || !keysEl.contains(focused)) {
@@ -241,11 +260,14 @@ function init() {
     }
   }
 
-  document.addEventListener("keydown", event => {
+  document.addEventListener("keydown", (event) => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     // Leave any future text fields' keyboard behaviour alone.
-    if (event.target instanceof Element &&
-        event.target.closest("input, textarea, select, [contenteditable]")) return;
+    if (
+      event.target instanceof Element &&
+      event.target.closest("input, textarea, select, [contenteditable]")
+    )
+      return;
 
     if (Object.hasOwn(directions, event.key)) {
       event.preventDefault();
@@ -254,19 +276,30 @@ function init() {
     }
 
     const focusedButton = buttons.includes(document.activeElement)
-      ? document.activeElement : null;
+      ? document.activeElement
+      : null;
     if (event.key === "Enter" && focusedButton) {
       event.preventDefault();
       focusedButton.click();
       return;
     }
 
-    const shortcuts = ["+", "-", "*", "/", ".", "Enter", "=",
-      "Backspace", "Escape", "Delete"];
+    const shortcuts = [
+      "+",
+      "-",
+      "*",
+      "/",
+      ".",
+      "Enter",
+      "=",
+      "Backspace",
+      "Escape",
+      "Delete",
+    ];
     if (/^\d$/.test(event.key) || shortcuts.includes(event.key)) {
       event.preventDefault();
       press(event.key);
-    }    // Tab, Shift+Tab and Space retain native button behaviour.
+    } // Tab, Shift+Tab and Space retain native button behaviour.
   });
 
   updateDisplay();
