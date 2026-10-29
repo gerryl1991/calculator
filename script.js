@@ -266,8 +266,7 @@ function init() {
     if (/^\d$/.test(event.key) || shortcuts.includes(event.key)) {
       event.preventDefault();
       press(event.key);
-    }
-    // Tab, Shift+Tab and Space retain native button behaviour.
+    }    // Tab, Shift+Tab and Space retain native button behaviour.
   });
 
   updateDisplay();
