@@ -116,6 +116,20 @@ function backspace() {
   updateDisplay();
 }
 
+function toggleSign() {
+  if (state.hasError) return;
+
+  if (parseFloat(state.displayValue) === 0) return;
+
+  state.displayValue = state.displayValue.startsWith("-")
+    ? state.displayValue.slice(1)
+    : "-" + state.displayValue;
+
+  state.resetNext = false;
+
+  updateDisplay();
+}
+
 function clearAll() {
   state.displayValue = "0";
   state.firstNumber = null;
@@ -199,6 +213,7 @@ function press(key) {
   if (/^\d$/.test(key)) inputDigit(key);
   else if ("+-*/".includes(key)) chooseOperator(key);
   else if (key === ".") inputDecimal();
+  else if (key === "plusminus") toggleSign();
   else if (key === "Enter" || key === "=") equals();
   else if (key === "Backspace") backspace();
   else if (key === "Escape" || key === "Delete") clearAll();

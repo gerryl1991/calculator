@@ -1,43 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Calculator</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<main class="calculator" aria-label="Calculator">
-  <div class="display" aria-live="polite">
-    <div class="expression" id="expression"></div>
-    <div class="current" id="current">0</div>
-  </div>
-  <div class="keys">
-    <button class="fn" data-key="Escape" aria-label="Clear">AC</button>
-    <button class="fn" data-key="Backspace" aria-label="Backspace">&#9003;</button>
-    <button class="op" data-key="/" aria-label="Divide">&divide;</button>
-    <button class="op" data-key="*" aria-label="Multiply">&times;</button>
+  <main class="calculator" aria-label="Calculator">
+    <div class="display" aria-live="polite">
+      <div class="expression" id="expression"></div>
+      <div class="current" id="current">0</div>
+    </div>
+    <div class="keys">
+      <button class="fn" data-key="Escape" aria-label="Clear">AC</button>
+      <button class="fn" data-key="Backspace" aria-label="Backspace">&#9003;</button>
+      <button class="fn" data-key="plusminus" aria-label="Plus/Minus">+/-</button>
+      <button class="op" data-key="/" aria-label="Divide">&divide;</button>
 
-    <button data-key="7">7</button>
-    <button data-key="8">8</button>
-    <button data-key="9">9</button>
-    <button class="op" data-key="-" aria-label="Subtract">&minus;</button>
+      <button data-key="7">7</button>
+      <button data-key="8">8</button>
+      <button data-key="9">9</button>
+      <button class="op" data-key="*" aria-label="Multiply">&times;</button>
 
-    <button data-key="4">4</button>
-    <button data-key="5">5</button>
-    <button data-key="6">6</button>
-    <button class="op" data-key="+" aria-label="Add">+</button>
+      <button data-key="4">4</button>
+      <button data-key="5">5</button>
+      <button data-key="6">6</button>
+      <button class="op" data-key="-" aria-label="Subtract">&minus;</button>
 
-    <button data-key="1">1</button>
-    <button data-key="2">2</button>
-    <button data-key="3">3</button>
-    <button class="eq" data-key="Enter" aria-label="Equals">=</button>
+      <button data-key="1">1</button>
+      <button data-key="2">2</button>
+      <button data-key="3">3</button>
+      <button class="op" data-key="+" aria-label="Add">+</button>
 
-    <button class="zero" data-key="0">0</button>
-    <button id="decimal" data-key="." aria-label="Decimal point">.</button>
-  </div>
-</main>
+      <button class="zero" data-key="0">0</button>
+      <button id="decimal" data-key="." aria-label="Decimal point">.</button>
+      <button class="op" data-key="Enter" aria-label="Equals">=</button>
+    </div>
+  </main>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
