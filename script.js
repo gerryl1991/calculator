@@ -52,7 +52,7 @@ const decimalBtn = document.getElementById("decimal");
 
 // ---------- Display ----------
 function formatResult(number) {
-  let rounded = parseFloat(number.toPrecision(10)); // kills 0.1+0.2 style noise
+  let rounded = parseFloat(number.toPrecision(4)); // kills 0.1+0.2 style noise
   let text = String(rounded);
   if (text.length > MAX_DIGITS) text = rounded.toExponential(5);
   return text;
